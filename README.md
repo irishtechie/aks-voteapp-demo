@@ -50,6 +50,9 @@ VNET_NAME=cloudacademy-aks-vnet
 
 ## STEP 1.2:
 
+**OBSOLETE - USE MI**
+**REMOVE**
+
 Create a new service principal. The AKS cluster will later be created with this.
 
 ```
@@ -70,14 +73,17 @@ Create a new vnet and subnet for the AKS cluster
 az network vnet create \
     --name $VNET_NAME \
     --resource-group $RESOURCE_GROUP \
-    --address-prefixes 10.0.0.0/8 \
+    --address-prefixes 10.99.0.0/16 \
     --subnet-name aks-subnet \
-    --subnet-prefix 10.240.0.0/16
+    --subnet-prefix 10.99.0.0/24
 ```
 
 ## STEP 1.4:
 
 Assign the contributor role to the service principal scoped on the vnet previously created
+
+**OBSOLETE - USE MI**
+**REMOVE**
 
 ```
 VNETID=$(az network vnet show \
@@ -103,7 +109,7 @@ Standard_B2ms
 
 ```
 SUBNETID=$(az network vnet subnet show \
-  --name aks-subnet \
+  --name akssubnet \
   --resource-group $RESOURCE_GROUP \
   --vnet-name $VNET_NAME \
   --query id \
@@ -112,21 +118,22 @@ SUBNETID=$(az network vnet subnet show \
 echo SUBNETID: $SUBNETID
 
 az aks create \
-  --name $CLUSTER_NAME \
-  --resource-group $RESOURCE_GROUP \
-  --node-count 2 \
-  --node-vm-size Standard_D4s_v3 \
-  --vm-set-type VirtualMachineScaleSets \
-  --kubernetes-version 1.18.8 \
-  --network-plugin azure \
-  --service-cidr 10.0.0.0/16 \
-  --dns-service-ip 10.0.0.10 \
-  --docker-bridge-address 172.17.0.1/16 \
-  --vnet-subnet-id $SUBNETID \
-  --generate-ssh-keys \
-  --network-policy azure \
-  --service-principal $APPID \
-  --client-secret $PASSWD 
+--resource-group $RESOURCE_GROUP \
+--name $CLUSTER_NAME \
+--node-count 2 \
+--nodepool-name syspool \
+--node-vm-size Standard_D4s_v3 \
+--node-resource-group $NODE_RESOURCE_GROUP \
+--generate-ssh-keys \
+--network-plugin azure \
+--network-policy calico \
+--enable-managed-identity \
+--enable-cluster-autoscaler \
+--min-count 2 \
+--max-count 10 \
+--vnet-subnet-id  $SUBNETID \
+--zones 1 2 3 \
+--yes
 ```
 
 This takes between **5-10 minutes** to complete so sit back and relax, its major chill time :+1:
