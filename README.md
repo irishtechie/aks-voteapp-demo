@@ -239,11 +239,17 @@ kubectl config set-context --current --namespace cloudlunchlearn
 
 # STEP 5:
 
+**OBSOLETE - USE MI**
+**REMOVE**
+
 Deploy MongoDB 3 x ReplicaSet
 
 ![AKSDeployment](./doc/aks-mongodb.png)
 
 ## STEP 5.1:
+
+**OBSOLETE - USE MI**
+**REMOVE**
 
 Display the available AKS storage classes. We use the default storage class in the following MongoDb deployment.
 
@@ -252,6 +258,9 @@ kubectl get storageclass
 ```
 
 ## STEP 5.2:
+
+**OBSOLETE - USE MI**
+**REMOVE**
 
 Create a new Mongo StatefulSet name ```mongo```
 
@@ -323,6 +332,9 @@ EOF
 
 ## STEP 5.3:
 
+**OBSOLETE - USE MI**
+**REMOVE**
+
 Examine the Mongo Pods launch ordered sequence
 
 ```
@@ -341,6 +353,9 @@ kubectl get pod,pv,pvc
 ```
 
 ## STEP 5.4:
+
+**OBSOLETE - USE MI**
+**REMOVE**
 
 Create a new Headless Service for Mongo named ```mongo```
 
@@ -366,6 +381,9 @@ EOF
 
 ## STEP 5.5:
 
+**OBSOLETE - USE MI**
+**REMOVE**
+
 Examine the Mongo Headless Service
 
 ```
@@ -387,6 +405,9 @@ exit
 ```
 
 ## STEP 5.6:
+
+**OBSOLETE - USE MI**
+**REMOVE**
 
 Confirm that the mongo shell can resolve each of the 3 mongo headless service assigned dns names:
 
