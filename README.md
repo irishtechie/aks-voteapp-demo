@@ -225,23 +225,16 @@ echo FRONTEND_PUBLIC_FQDN: $FRONTEND_PUBLIC_FQDN
 
 # STEP 4:
 
-Create the ```cloudacademy``` namespace - holds the main sample cloud native application components
+Create the ```cloudlunchlearn``` namespace - holds the main sample cloud native application components
 
 ```
-cat << EOF | kubectl apply -f -
-apiVersion: v1
-kind: Namespace
-metadata:
-  name: cloudacademy
-  labels:
-    name: cloudacademy
-EOF
+kubectl create ns cloudlunchlearn
 ```
 
-Configure the ```cloudacademy``` namespace to be the default
+Configure the ```cloudlunchlearn``` namespace to be the default
 
 ```
-kubectl config set-context --current --namespace cloudacademy
+kubectl config set-context --current --namespace cloudlunchlearn
 ```
 
 # STEP 5:
