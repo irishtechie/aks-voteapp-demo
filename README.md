@@ -165,14 +165,7 @@ Install the Nginx Ingress Controller. This will allow us to direct inbound exter
 Create the ```nginx-ingress``` namespace - holds the Nginx Ingress Controller components.
 
 ```
-cat << EOF | kubectl apply -f -
-apiVersion: v1
-kind: Namespace
-metadata:
-  name: nginx-ingress
-  labels:
-    name: nginx-ingress
-EOF
+kubectl create ns nginx-ingress
 ```
 
 ## STEP 3.2:
@@ -186,10 +179,16 @@ Notes:
 
 ```
 helm version
-helm repo add nginx-stable https://helm.nginx.com/stable
+helm repo add ingress-nginx https://kubernetes.github.io/ingress-nginx
+helm repo add stable https://charts.helm.sh/stable
 helm repo update
-helm search repo nginx-ingress
-helm install aks-nginx-ingress nginx-stable/nginx-ingress --namespace nginx-ingress
+helm upgrade --install nginx-ingress ingress-nginx/ingress-nginx \
+--namespace nginx-ingress \
+--set controller.replicaCount=2 \
+--set controller.nodeSelector."kubernetes\.io/os"=linux \
+--set defaultBackend.nodeSelector."beta\.kubernetes\.io/os"=linux \
+--set controller.admissionWebhooks.patch.nodeSelector."beta\.kubernetes\.io/os"=linux \
+--set controller.service.externalTrafficPolicy=Local
 ```
 
 ## STEP 3.3:
@@ -199,7 +198,7 @@ Query the Nginx Ingress Controller and determine the public ip address that has 
 Wait until the Nginx Ingress Controller has been allocated a public IP address
 
 ```
-kubectl get svc aks-nginx-ingress-nginx-ingress -n nginx-ingress --watch
+kubectl get svc nginx-ingress-ingress-nginx-controller -n nginx-ingress --watch
 ```
 
 Use ```Ctrl-C``` key sequence to exit the watch
@@ -211,9 +210,9 @@ Notes:
 4. The https://nip.io/ dynamic DNS service is being used to provide wildcard DNS
 
 ```
-kubectl get svc aks-nginx-ingress-nginx-ingress -n nginx-ingress -o json
+kubectl get svc nginx-ingress-ingress-nginx-controller -n nginx-ingress -o json
 
-INGRESS_PUBLIC_IP=$(kubectl get svc aks-nginx-ingress-nginx-ingress -n nginx-ingress -o=jsonpath='{.status.loadBalancer.ingress[0].ip}')
+INGRESS_PUBLIC_IP=$(kubectl get svc nginx-ingress-ingress-nginx-controller -n nginx-ingress -o=jsonpath='{.status.loadBalancer.ingress[0].ip}')
 
 echo INGRESS_PUBLIC_IP: $INGRESS_PUBLIC_IP
 
