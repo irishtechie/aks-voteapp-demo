@@ -239,6 +239,7 @@ kubectl config set-context --current --namespace cloudlunchlearn
 
 # STEP 5:
 
+**Update to Deploy CosmosDB using MongoAPI via Az CLI**
 **OBSOLETE - USE MI**
 **REMOVE**
 
